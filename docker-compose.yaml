@@ -59,7 +59,7 @@ services:
 
     go:
         build:
-            context: ./
+            context: ./go
         container_name: go
         depends_on:
             - postgres
