@@ -34,6 +34,10 @@ func (con *Controller) Send(c *gin.Context) {
 		zap.String("function", "Send"),
 	)
 
+	// Start timer
+	startTime := time.Now()
+	logger.Debug("Started")
+
 	// Validate request
 	var requestData models.Request
 	if err := c.BindJSON(&requestData); err != nil {
@@ -46,9 +50,6 @@ func (con *Controller) Send(c *gin.Context) {
 	logger.Debug("Object binded",
 		zap.Any("Request", requestData),
 	)
-
-	// Start timer
-	startTime := time.Now()
 
 	serviceData := mappers.MapToService(requestData)
 	logger.Debug("Sending to service",
