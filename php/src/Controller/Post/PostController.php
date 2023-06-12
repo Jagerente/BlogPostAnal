@@ -2,12 +2,8 @@
 
 namespace App\Controller\Post;
 
-use App\Entity\PostAnalytics;
-use App\Enum\PostEventsEnum;
-use App\Service\AnalyticsService;
 use App\Service\PostAnalyticsService;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,8 +19,6 @@ use App\Form\Post\EditPostType;
 use App\Form\Post\ModeratePostType;
 
 use App\Repository\PostRepository;
-
-
 
 #[Route('/'), \Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted('IS_AUTHENTICATED_FULLY')]
 class PostController extends AbstractController
@@ -115,9 +109,11 @@ class PostController extends AbstractController
         // Author only access
         $this->denyAccessUnlessGranted(RoleEnum::Author);
 
+        $user = $this->security->getuser();
+
         // Preconfigure post
         $post = new Post();
-        $post->setAuthor($this->security->getuser())
+        $post->setAuthor($user)
             ->setStatus(PostStatusEnum::Pending);
 
         // Create form
@@ -128,14 +124,7 @@ class PostController extends AbstractController
             // Add post to database
             $postRepository->save($post, true);
 
-            // Configure analytics message
-            $analyticsData = new PostAnalytics();
-            $analyticsData->setUserId($post->getAuthor()->getId());
-            $analyticsData->setPostId($post->getId());
-            $analyticsData->setEvent(PostEventsEnum::Created);
-            $analyticsData->setDetails($this->security->getuser()->getRoles()[0] . " with id " . $this->security->getuser()->getId() . " created post with id " . $post->getId() . " . Title: \"" . $post->getTitle() . "\"; Body: \"" . $post->getBody() . "\".");
-
-            $this->analyticsService->send($analyticsData);
+            $this->analyticsService->sendCreateEvent($user, $post);
 
             return $this->redirectToRoute('post_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -156,8 +145,10 @@ class PostController extends AbstractController
             }
         }
 
+        $user = $this->security->getuser();
+
         // Make sure user has default role at least
-        $role = $this->security->getuser() ? $this->security->getuser()->getRoles()[0] : RoleEnum::User;
+        $role = $user ? $user->getRoles()[0] : RoleEnum::User;
 
         // Generate different views for each role
         $template = match ($role) {
@@ -177,8 +168,9 @@ class PostController extends AbstractController
         // Only authors can edit posts
         $this->denyAccessUnlessGranted(RoleEnum::Author);
 
-        $oldTitle = $post->getTitle();
-        $oldBody = $post->getBody();
+        $user = $this->security->getuser();
+
+        $oldPost = clone $post;
 
         // Preconfigure post
         $post->setStatus(PostStatusEnum::Pending);
@@ -191,14 +183,7 @@ class PostController extends AbstractController
             // Edit post in database
             $postRepository->save($post, true);
 
-            // Configure analytics message
-            $analyticsData = new PostAnalytics();
-            $analyticsData->setUserId($post->getAuthor()->getId());
-            $analyticsData->setPostId($post->getId());
-            $analyticsData->setEvent(PostEventsEnum::Edited);
-            $analyticsData->setDetails($this->security->getuser()->getRoles()[0] . " with id " . $this->security->getuser()->getId() . " edited post with id " . $post->getId() . " . Title changed from \"" . $oldTitle . "\" to \"" . $post->getTitle() . "\"; Body changed from \"" . $oldBody . "\" to \"" . $post->getBody() . "\".");
-
-            $this->analyticsService->send($analyticsData);
+            $this->analyticsService->sendEditEvent($user, $oldPost, $post);
 
             return $this->redirectToRoute('post_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -215,14 +200,15 @@ class PostController extends AbstractController
         // Only moderator can moderate posts
         $this->denyAccessUnlessGranted(RoleEnum::Moderator);
 
-        $oldStatus = $post->getStatus();
+        $user = $this->security->getuser();
+
+        $oldPost = clone $post;
 
         $form = $this->createForm(ModeratePostType::class, $post);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Configure analytics message
-            $analyticsData = new PostAnalytics();
+            // Remove moderator note if post is not declined
             if ($post->getStatus() != PostStatusEnum::Declined) {
                 $post->setModeratorNote(null);
             }
@@ -230,25 +216,7 @@ class PostController extends AbstractController
             // Save in database
             $postRepository->save($post, true);
 
-            $analyticsData->setUserId($post->getAuthor()->getId());
-            $analyticsData->setPostId($post->getId());
-            $analyticsData->setEvent(PostEventsEnum::Moderated);
-            $analyticsData->setDetails($this->security->getuser()->getRoles()[0]
-                . " with id "
-                . $this->security->getuser()->getId()
-                . " moderated post with id "
-                . $post->getId()
-                . " . Status changed from "
-                . $oldStatus
-                . " to"
-                . $post->getStatus()
-                . $post->getModeratorNote()
-                ? ". Moderator note: \""
-                . $post->getModeratorNote()
-                . "\"."
-                : ".");
-
-            $this->analyticsService->send($analyticsData);
+            $this->analyticsService->sendModerateEvent($user, $oldPost, $post);
 
             return $this->redirectToRoute('post_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -265,18 +233,14 @@ class PostController extends AbstractController
         // Only author can delete posts
         $this->denyAccessUnlessGranted(RoleEnum::Author);
 
-        if ($this->isCsrfTokenValid('delete' . $post->getId(), $request->request->get('_token'))) {
-            // Configure analytics message
-            $analyticsData = new PostAnalytics();
-            $analyticsData->setUserId($post->getAuthor()->getId());
-            $analyticsData->setPostId($post->getId());
-            $analyticsData->setEvent(PostEventsEnum::Deleted);
-            $analyticsData->setDetails($this->security->getuser()->getRoles()[0] . " with id " . $this->security->getuser()->getId() . " deleted post with id " . $post->getId());
+        $user = $this->security->getuser();
 
+        $oldPost = clone $post;
+
+        if ($this->isCsrfTokenValid('delete' . $post->getId(), $request->request->get('_token'))) {
             $postRepository->remove($post, true);
 
-
-            $this->analyticsService->send($analyticsData);
+            $this->analyticsService->sendDeleteEvent($user, $oldPost);
         }
 
         return $this->redirectToRoute('post_index', [], Response::HTTP_SEE_OTHER);
