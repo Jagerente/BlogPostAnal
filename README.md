@@ -28,6 +28,17 @@ Events:
 
 Golang service simulates working with events and stores them in database. Simulation has 10% chance to throw an error (100% for post_id %3==0) and random throttling for a 3-15 seconds.
 
+There are fixtures for all roles type accounts:
+- Author
+  - author@example.com
+  - qwe123
+- Moderator
+  - moderator@example.com
+  - qwe123
+- Guest
+  - guest@example.com
+  - qwe123
+
 TBD: symfony skeleton and dependencies cleaning. ;=;
 
 ## Requirements
