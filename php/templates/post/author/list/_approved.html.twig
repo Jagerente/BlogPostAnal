@@ -33,9 +33,9 @@
 				<td>{{ post.createdAt ? post.createdAt|date('Y-m-d H:i:s') : '' }}</td>
 				<td>
 					<div class="column__actions">
-						{{ include('post/buttons/_show_post.html.twig', {'id': post.id}) }}
-						{{ include('post/buttons/_edit_post.html.twig', {'id': post.id}) }}
-						{{ include('post/buttons/_delete_post.html.twig', {'id': post.id}) }}
+						{{ include('post/_buttons/_show_post.html.twig', {'id': post.id}) }}
+						{{ include('post/_buttons/_edit_post.html.twig', {'id': post.id}) }}
+						{{ include('post/_buttons/_delete_post.html.twig', {'id': post.id}) }}
 					</div>
 				</td>
 			</tr>
@@ -47,4 +47,4 @@
 	</tbody>
 </table>
 
-{{ include('post/buttons/_create_post.html.twig') }}
+{{ include('post/_buttons/_create_post.html.twig') }}

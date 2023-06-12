@@ -4,20 +4,40 @@
 {% endblock %}
 
 {% block body %}
-	{{ include('css/register.html.twig') }}
-
-	{{ include('security/_login_btn.html.twig') }}
-
+	<link href="{{ asset('css/pages/auth/register.css') }}" rel="stylesheet"/>
 
 	{{ form_errors(registrationForm) }}
 
-	{{ form_start(registrationForm, {'attr': {'class': 'register-form'}}) }}
+	{{ form_start(registrationForm, {
+		'attr': {'class': 'register-form'}
+		}) }}
+
 	<h1 class="register-form__title">Register</h1>
-	{{ form_row(registrationForm.email, {'attr': {'class': 'register-form__input'}}) }}
-	{{ form_row(registrationForm.username, {'attr': {'class': 'register-form__input'}}) }}
-	{{ form_row(registrationForm.plainPassword, {'label': 'Password', 'attr': {'class': 'register-form__input'}}) }}
-	{{ form_row(registrationForm.agreeTerms, {'label_attr': {'class': 'register-form__label'}, 'widget_attr': {'class': 'register-form__checkbox'}}) }}
+
+	{{ form_row(registrationForm.email, {
+		'row_attr': {'class': 'register-form__row'},
+		'attr': {'class': 'register-form__input'}
+		}) }}
+
+	{{ form_row(registrationForm.username, {
+		'row_attr': {'class': 'register-form__row'},
+		'attr': {'class': 'register-form__input'}
+		}) }}
+
+	{{ form_row(registrationForm.plainPassword, {
+		'row_attr': {'class': 'register-form__row'},
+		'label': 'Password', 
+		'attr': {'class': 'register-form__input'}
+		}) }}
+
+	{{ form_row(registrationForm.agreeTerms, {
+		'row_attr': {'class': 'register-form__terms'},
+		'label_attr': {'class': 'register-form__label'}, 
+		'attr': {'class': 'register-form__checkbox'}
+		}) }}
+
 	<button type="submit" class="btn register-form__submit">Register</button>
+
 	{{ form_end(registrationForm) }}
 
 {% endblock %}

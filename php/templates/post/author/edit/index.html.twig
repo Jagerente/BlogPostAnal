@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block body %}
-	{{ include('css/post_form.html.twig') }}
+	<link href="{{ asset('css/components/posts/forms/post_form.css') }}" rel="stylesheet"/>
 
 	<div class="post-form">
 		<h1 class="post-form__title">Edit Post</h1>
@@ -23,11 +23,11 @@
 
 		<div class="post-form__actions">
 			<button type="submit" class="post-form__button btn">Save</button>
-			{{ include('post/buttons/_back_to_list.html.twig') }}
+			{{ include('post/_buttons/_back_to_list.html.twig') }}
 		</div>
 		{{ form_end(form) }}
 
-		{{ include('post/buttons/_delete_post.html.twig', {'id': post.id}) }}
+		{{ include('post/_buttons/_delete_post.html.twig', {'id': post.id}) }}
 
 	</div>
 </div>{% endblock %}

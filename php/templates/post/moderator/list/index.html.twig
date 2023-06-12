@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block body %}
-	{{ include('css/list.html.twig') }}
+	<link href="{{ asset('css/pages/posts/posts_control.css') }}" rel="stylesheet"/>
 
 	<h2>Pending</h2>
 	{{ include('post/moderator/list/_list.html.twig', { 'posts': posts_pending }) }}

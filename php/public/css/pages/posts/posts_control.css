@@ -1,0 +1,26 @@
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+}
+
+.table td:nth-child(3) {
+    width: 100%;
+}
+
+.table th,
+.table td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    white-space: nowrap;
+}
+
+.table th {
+    background-color: #f2f2f2;
+}
+
+.column__actions {
+    display: flex;
+    gap: 0.5em;
+}

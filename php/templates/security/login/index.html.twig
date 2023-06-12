@@ -4,9 +4,7 @@
 {% endblock %}
 
 {% block body %}
-	{{ include('css/login.html.twig') }}
-
-	{{ include('security/_register_btn.html.twig') }}
+	<link href="{{ asset('css/pages/auth/login.css') }}" rel="stylesheet"/>
 
 	<form method="post" class="login-form">
 		{% if error %}
@@ -21,21 +19,21 @@
 				{{ app.user.userIdentifier }},
 				<a href="{{ path('app_logout') }}">Logout</a>
 			</div>
+		{% else %}
+			<h1 class="login-form__title">Please sign in</h1>
+			<div class="login-form__inputs">
+				<label for="inputEmail" class="inputs__label">Email</label>
+				<input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="inputs__input" autocomplete="email" required autofocus>
+				<label for="inputPassword" class="inputs__label">Password</label>
+				<input type="password" name="password" id="inputPassword" class="inputs__input" autocomplete="current-password" required>
+				<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+				<button class="inputs__button btn" type="submit">
+					Sign in
+				</button>
+
+			</div>
 		{% endif %}
-
-		<h1 class="login-form__title">Please sign in</h1>
-		<div class="login-form__inputs">
-			<label for="inputEmail" class="inputs__label">Email</label>
-			<input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="inputs__input" autocomplete="email" required autofocus>
-			<label for="inputPassword" class="inputs__label">Password</label>
-			<input type="password" name="password" id="inputPassword" class="inputs__input" autocomplete="current-password" required>
-			<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-
-			<button class="inputs__button btn" type="submit">
-				Sign in
-			</button>
-
-		</div>
 
 	</form>
 {% endblock %}

@@ -1,4 +1,4 @@
-{{ include('css/moderator_form.html.twig') }}
+<link href="{{ asset('css/components/posts/forms/moderator_form.css') }}" rel="stylesheet"/>
 
 {{ form_start(form) }}
 <div class="form__body">
@@ -13,13 +13,13 @@
 </div>
 <div class="form__actions">
 	<button class="btn">{{ button_label|default('Save') }}</button>
-	{{ include('post/buttons/_back_to_list.html.twig') }}
+	{{ include('post/_buttons/_back_to_list.html.twig') }}
 </div>
 
 {{ form_end(form) }}
 
 <script>
-	var statusField = document.getElementById('{{ form.status.vars.id }}');
+var statusField = document.getElementById('{{ form.status.vars.id }}');
 var moderatorNoteWrapper = document.getElementById('moderator-note-wrapper');
 var moderatorNoteField = document.getElementById('{{ form.moderator_note.vars.id }}');
 

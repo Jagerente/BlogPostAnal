@@ -1,0 +1,8 @@
+.form__body {
+    margin-bottom: 0.5rem;
+}
+
+.form__actions {
+    display: flex;
+    gap: 0.5rem;
+}

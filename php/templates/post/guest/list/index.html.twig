@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Post
+{% block title %}Posts
 {% endblock %}
 
 {% block body %}
-	{{ include('css/guest_list.html.twig') }}
+	<link href="{{ asset('css/pages/posts/posts_list.css') }}" rel="stylesheet"/>
 
 	<h1>Posts</h1>
 
@@ -14,9 +14,10 @@
 				<h2 class="post-card__title">{{ post.title|slice(0, 32) }}</h2>
 				<p class="post-card__description">{{ post.body|slice(0, 64) }}</p>
 				<p class="post-card__created-at">{{ post.createdAt ? post.createdAt|date('Y-m-d H:i:s') : '' }}</p>
-				<p class="post-card__author">Written by: {{ post.author.username }}</p>
+				<p class="post-card__author">Written by:
+					{{ post.author.username }}</p>
 				<div class="post-card__actions">
-					{{ include('post/buttons/_show_post.html.twig', {'id': post.id}) }}
+					{{ include('post/_buttons/_show_post.html.twig', {'id': post.id}) }}
 				</div>
 			</div>
 		{% else %}

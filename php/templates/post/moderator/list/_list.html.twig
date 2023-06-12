@@ -5,8 +5,8 @@
 			<th>Author</th>
 			<th>Title</th>
 			<th>Body</th>
-			<th>Created_at</th>
-			<th>actions</th>
+			<th>Date</th>
+			<th>Actions</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -32,7 +32,7 @@
 				</td>
 				<td>{{ post.createdAt ? post.createdAt|date('Y-m-d H:i:s') : '' }}</td>
 				<td>
-					{{ include('post/buttons/_moderate_post.html.twig', {'id': post.id}) }}
+					{{ include('post/_buttons/_moderate_post.html.twig', {'id': post.id}) }}
 				</td>
 			</tr>
 		{% else %}

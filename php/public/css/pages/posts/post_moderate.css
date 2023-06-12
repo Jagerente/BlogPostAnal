@@ -1,0 +1,37 @@
+h2 {
+    font-size: 20px;
+}
+
+.post-details {
+    width: 100%;
+}
+
+.post-details__title,
+.post-details__body,
+.post-details__meta {
+    margin-bottom: 0.5rem;
+}
+
+.title__title,
+.body__title,
+.meta__title {
+    font-weight: bold;
+}
+
+.title__value,
+.body__value,
+.meta__value {
+    margin-top: 5px;
+}
+
+.title__title,
+.body__title,
+.meta__title {
+    color: #333;
+}
+
+.title__value,
+.body__value,
+.meta__value {
+    color: #666;
+}

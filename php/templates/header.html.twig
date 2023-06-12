@@ -1,0 +1,11 @@
+<div class="header">
+	{% if app.user %}
+		{{ include('security/_buttons/_logout_btn.html.twig') }}
+	{% else %}
+		{% if app.request.attributes.get('_route') ==  'app_login' %}
+			{{ include('security/_buttons/_register_btn.html.twig') }}
+		{% else %}
+			{{ include('security/_buttons/_login_btn.html.twig') }}
+		{% endif %}
+	{% endif %}
+</div>

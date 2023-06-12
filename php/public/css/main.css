@@ -1,0 +1,22 @@
+@import "header.css";
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+label {
+    font-size: 18px;
+}
+
+h1 {
+    font-size: 24px;
+}

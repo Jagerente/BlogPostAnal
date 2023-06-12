@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block body %}
-	{{ include('css/post.html.twig') }}
+	<link href="{{ asset('css/components/posts/post_details.css') }}" rel="stylesheet"/>
 
 	<div class="post-details">
 		<h1 class="post-details__title">{{ post.title }}</h1>
@@ -20,5 +20,5 @@
 		</div>
 	</div>
 
-	{{ include('post/buttons/_back_to_list.html.twig') }}
+	{{ include('post/_buttons/_back_to_list.html.twig') }}
 {% endblock %}
