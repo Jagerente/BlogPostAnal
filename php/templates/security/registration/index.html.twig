@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register
+{% endblock %}
+
+{% block body %}
+	{{ include('css/register.html.twig') }}
+
+	{{ include('security/_login_btn.html.twig') }}
+
+
+	{{ form_errors(registrationForm) }}
+
+	{{ form_start(registrationForm, {'attr': {'class': 'register-form'}}) }}
+	<h1 class="register-form__title">Register</h1>
+	{{ form_row(registrationForm.email, {'attr': {'class': 'register-form__input'}}) }}
+	{{ form_row(registrationForm.username, {'attr': {'class': 'register-form__input'}}) }}
+	{{ form_row(registrationForm.plainPassword, {'label': 'Password', 'attr': {'class': 'register-form__input'}}) }}
+	{{ form_row(registrationForm.agreeTerms, {'label_attr': {'class': 'register-form__label'}, 'widget_attr': {'class': 'register-form__checkbox'}}) }}
+	<button type="submit" class="btn register-form__submit">Register</button>
+	{{ form_end(registrationForm) }}
+
+{% endblock %}

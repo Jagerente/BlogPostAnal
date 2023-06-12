@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Create Post
+{% endblock %}
+
+{% block body %}
+	{{ include('css/post_form.html.twig') }}
+
+	<div class="post-form">
+		<h1 class="post-form__title">Create Post</h1>
+
+		{{ form_start(form, {'attr': {'class': 'post-form'}}) }}
+
+		<div class="post-form__field">
+			{{ form_label(form.title, 'Title', {'label_attr': {'class': 'post-form__label'}}) }}
+			{{ form_widget(form.title, {'attr': {'class': 'post-form__input'}}) }}
+		</div>
+
+		<div class="post-form__field">
+			{{ form_label(form.body, 'Body', {'label_attr': {'class': 'post-form__label'}}) }}
+			{{ form_widget(form.body, {'attr': {'class': 'post-form__textarea'}}) }}
+		</div>
+
+		<div class="post-form__actions">
+			<button type="submit" class="post-form__button btn">Create</button>
+			{{ include('post/buttons/_back_to_list.html.twig') }}
+		</div>
+
+		{{ form_end(form) }}
+
+	</div>
+{% endblock %}

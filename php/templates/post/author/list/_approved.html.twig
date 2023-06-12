@@ -1,0 +1,50 @@
+<h1>Approved</h1>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th>Id</th>
+			<th>Title</th>
+			<th>Body</th>
+			<th>Date</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for post in posts %}
+			<tr>
+				<td>{{ post.id }}</td>
+				<td>
+					{% set slicedTitle = post.title|slice(0, 16) %}
+					{% if slicedTitle|length < post.title|length %}
+						{{ slicedTitle }}...
+					{% else %}
+						{{ slicedTitle }}
+					{% endif %}
+				</td>
+				<td>
+					{% set slicedBody = post.body|slice(0, 32) %}
+					{% if slicedBody|length < post.body|length %}
+						{{ slicedBody }}...
+					{% else %}
+						{{ slicedBody }}
+					{% endif %}
+				</td>
+				<td>{{ post.createdAt ? post.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+				<td>
+					<div class="column__actions">
+						{{ include('post/buttons/_show_post.html.twig', {'id': post.id}) }}
+						{{ include('post/buttons/_edit_post.html.twig', {'id': post.id}) }}
+						{{ include('post/buttons/_delete_post.html.twig', {'id': post.id}) }}
+					</div>
+				</td>
+			</tr>
+		{% else %}
+			<tr>
+				<td colspan="7">no records found</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
+{{ include('post/buttons/_create_post.html.twig') }}

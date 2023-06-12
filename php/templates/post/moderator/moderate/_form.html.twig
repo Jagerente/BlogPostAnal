@@ -1,0 +1,39 @@
+{{ include('css/moderator_form.html.twig') }}
+
+{{ form_start(form) }}
+<div class="form__body">
+	{{ form_row(form.status) }}
+	<div id="moderator-note-wrapper" {% if form.status.vars.value != 'declined' %} style="display: none" {% endif %}>
+		{{ form_row(form.moderator_note, {
+            'attr': {
+                'value': form.status.vars.value == 'pending' ? 'Pending.' : (form.status.vars.value == 'approved' ? 'Approved.' : '')
+            }
+        }) }}
+	</div>
+</div>
+<div class="form__actions">
+	<button class="btn">{{ button_label|default('Save') }}</button>
+	{{ include('post/buttons/_back_to_list.html.twig') }}
+</div>
+
+{{ form_end(form) }}
+
+<script>
+	var statusField = document.getElementById('{{ form.status.vars.id }}');
+var moderatorNoteWrapper = document.getElementById('moderator-note-wrapper');
+var moderatorNoteField = document.getElementById('{{ form.moderator_note.vars.id }}');
+
+function toggleModeratorNote() {
+if (statusField.value === 'declined') {
+moderatorNoteWrapper.style.display = 'block';
+moderatorNoteField.value = '';
+} else {
+moderatorNoteWrapper.style.display = 'none';
+moderatorNoteField.value = statusField.value === 'pending' ? 'Pending.' : (statusField.value === 'approved' ? 'Approved.' : '');
+}
+}
+
+toggleModeratorNote();
+
+statusField.addEventListener('change', toggleModeratorNote);
+</script>

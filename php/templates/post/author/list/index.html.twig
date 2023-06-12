@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Post index
+{% endblock %}
+
+{% block body %}
+	{{ include('css/list.html.twig') }}
+	{{ include('post/author/list/_declined.html.twig', {'posts': posts_declined}) }}
+	{{ include('post/author/list/_pending.html.twig', {'posts': posts_pending }) }}
+	{{ include('post/author/list/_approved.html.twig', {'posts': posts_approved }) }}
+{% endblock %}

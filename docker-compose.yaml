@@ -1,0 +1,82 @@
+version: '3.8'
+services:
+    nginx:
+        build:
+            context: ./docker/nginx
+        container_name: nginx
+        volumes:
+            - ./php:/var/www:rw
+            - ./logs/nginx:/var/log/nginx/:rw
+        ports:
+            - 80:80
+        restart: always
+        networks:
+            - internal
+        depends_on:
+            - php
+            - go
+    php:
+        build:
+            context: ./docker/php
+            args:
+                - PUID=${PUID:-1000}
+                - PGID=${PGID:-1000}
+                - INSTALL_XDEBUG=${INSTALL_XDEBUG:-false}
+        container_name: php
+        restart: always
+        environment:
+            - POSTGRES_HOST=${POSTGRES_HOST:-postgres}
+            - POSTGRES_DB=${POSTGRES_DB:-postgres}
+            - POSTGRES_USER=${POSTGRES_USER:-postgres}
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-12345}
+        depends_on:
+            - postgres
+            - go
+        volumes:
+            - ./php:/var/www
+        networks:
+            - internal
+    postgres:
+        image: postgres:${POSTGRES_VERSION:-}alpine
+        container_name: postgres
+        restart: always
+        environment:
+            - POSTGRES_DB=${POSTGRES_DB:-postgres}
+            - POSTGRES_USER=${POSTGRES_USER:-postgres}
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-12345}
+        ports:
+            - ${POSTGRES_HOST_PORT:-8300}:${POSTGRES_CONTAINER_PORT:-5432}
+        volumes:
+            - db_data:/var/lib/postgresql/data:rw
+        # - ./docker/db/data:/var/lib/postgresql/data:rw
+        networks:
+            - internal
+        healthcheck:
+            test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+            interval: 5s
+            timeout: 5s
+            retries: 5
+
+    go:
+        build:
+            context: ./
+        container_name: go
+        depends_on:
+            - postgres
+        restart: always
+        ports:
+            - ${SERVER_PORT_OUT:-}:${SERVER_PORT:-8301}
+        volumes:
+            - ./go:/tmp/src/go
+        networks:
+            - internal
+        env_file:
+            - .env
+
+volumes:
+    db_data:
+
+
+networks:
+    internal:
+        driver: bridge

@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Post
+{% endblock %}
+
+{% block body %}
+	{{ include('css/post.html.twig') }}
+
+	<div class="post-details">
+		<h1 class="post-details__title">{{ post.title }}</h1>
+		<div class="post-details__content">
+			<p class="post-details__body">{{ post.body }}</p>
+		</div>
+
+		<div class="post-details__meta">
+			<p class="post-details__created-at">Created at:
+				{{ post.createdAt ? post.createdAt|date('Y-m-d H:i:s') : '' }}</p>
+		</div>
+	</div>
+
+	{{ include('post/buttons/_edit_post.html.twig', {'post': post}) }}
+
+	{{ include('post/buttons/_back_to_list.html.twig') }}
+
+
+{% endblock %}
