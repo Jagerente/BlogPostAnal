@@ -1,3 +1,10 @@
+init:
+	make build
+	docker-compose exec php composer install
+	make migration
+	make fixture
+	docker-compose restart go
+
 up:
 	docker-compose up -d
 
@@ -8,7 +15,6 @@ build:
 	docker-compose down -v --remove-orphans
 	docker-compose rm -vsf
 	docker-compose up -d --build
-
 
 test:
 	docker-compose exec php vendor/bin/phpunit ./tests
@@ -23,27 +29,21 @@ psql:
 	docker-compose exec postgres psql -U postgres postgres
 
 create-migration:
-	docker-compose exec php bin/console make:migration
+	docker-compose exec php php bin/console make:migration
 
 migrate:
-	docker-compose exec php bin/console doctrine:migrations:migrate
+	docker-compose exec php php bin/console doctrine:migrations:migrate
 
 migration:
-	docker-compose exec php bin/console make:migration
-	docker-compose exec php bin/console doctrine:migrations:migrate
+	make create-migration
+	make migrate
 
 fixture:
-	docker-compose exec php bin/console doctrine:fixtures:load
+	docker-compose exec php php bin/console doctrine:fixtures:load
 
 fixture-append:
-	docker-compose exec php bin/console doctrine:fixtures:load --append
+	docker-compose exec php php bin/console doctrine:fixtures:load --append
 
 rebuild:
-	docker-compose down
-	docker-compose down -v --remove-orphans
-	docker-compose rm -vsf
-	docker-compose up -d --build
-	docker-compose exec php bin/console make:migration
-	docker-compose exec php bin/console doctrine:migrations:migrate
-	docker-compose exec php bin/console doctrine:fixtures:load
-	docker-compose restart go
+	make down
+	make init
